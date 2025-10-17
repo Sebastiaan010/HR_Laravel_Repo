@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\ForumPost;
 
 Route::get('/', function () {
-    return view('home');
+    $post = ForumPost::latest()->first();   // pak de meest recente
+    return view('home', compact('post'));
 });
-
 
 Route::get('/about', function () {
     return view('about');
