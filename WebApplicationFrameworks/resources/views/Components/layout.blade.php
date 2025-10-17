@@ -12,6 +12,7 @@
       <a href="/" class="font-semibold hover:underline">Home</a>
       <a href="/about" class="hover:underline">About</a>
       <a href="/contact" class="hover:underline">Contact</a>
+      <a href="/register">Register</a>
     </div>
   </nav>
 
