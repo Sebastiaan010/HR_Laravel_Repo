@@ -27,10 +27,12 @@ Route::middleware('auth')->group(function () {
     })->name('posts.store');
 });
 
+
 Route::get('/', function () {
-    $post = ForumPost::latest()->first();   // pak de meest recente
-    return view('home', compact('post'));
+    $posts = ForumPost::latest()->paginate(15); // max 15 per pagina
+    return view('home', compact('posts'));
 });
+
 
 Route::get('/about', function () {
     return view('about');
