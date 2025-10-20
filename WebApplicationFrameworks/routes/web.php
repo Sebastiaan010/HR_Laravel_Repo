@@ -17,7 +17,7 @@ Route::get('/', function () {
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 
-/**
+/** 
  * Posts (aanmaken) – alleen voor ingelogde users
  */
 Route::middleware('auth')->group(function () {
