@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ForumPost;
+use App\Models\Comment;
 
 /**
  * Home: laatste posts (max 15 per pagina)
@@ -59,6 +60,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/posts/{post}/comments', function (Request $req, ForumPost $post) {
+    $data = $req->validate([
+        'body' => ['required','string','max:1000'],
+    ]);
+
+    Comment::create([
+        'forum_post_id' => $post->id,
+        'user_id'       => auth()->id(),
+        'body'          => $data['body'],
+    ]);
+
+    return back()->with('success', 'Reactie geplaatst!');
+})->name('comments.store');
 });
 
 Route::get('/posts/{post}', function (ForumPost $post) {

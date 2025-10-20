@@ -34,6 +34,29 @@
                 <p class="text-slate-600">Nog geen reacties.</p>
             @endforelse
         </div>
+        {{-- Flash --}}
+        @if (session('success'))
+            <div class="mt-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @auth
+            <form method="POST" action="{{ route('comments.store', $post) }}" class="mt-6 space-y-3">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium">Je reactie</label>
+                    <textarea name="body" rows="4"
+                        class="mt-1 w-full rounded border border-slate-300 px-3 py-2">{{ old('body') }}</textarea>
+                    @error('body') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                </div>
+                <button class="px-4 py-2 rounded bg-blue-600 text-white">Plaatsen</button>
+            </form>
+        @else
+            <p class="mt-6 text-sm">
+                <a class="text-blue-600 underline" href="{{ route('login') }}">Log in</a> om te reageren.
+            </p>
+        @endauth
 
     </article>
 </x-layout>
