@@ -7,16 +7,24 @@
     </ul>
   @endif
 
-  <form method="POST" action="{{ route('posts.store') }}" class="max-w-xl space-y-3">
+  <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" class="max-w-xl space-y-3">
     @csrf
     <div>
       <label class="block text-sm mb-1">Titel</label>
       <input name="title" class="border rounded w-full px-3 py-2" value="{{ old('title') }}">
     </div>
+
     <div>
       <label class="block text-sm mb-1">Bericht</label>
       <textarea name="body" rows="6" class="border rounded w-full px-3 py-2">{{ old('body') }}</textarea>
     </div>
+
+    <div>
+      <label class="block text-sm mb-1">Afbeelding (optioneel)</label>
+      <input type="file" name="image" accept="image/*" class="block">
+      <p class="text-xs text-slate-500 mt-1">jpg, png, webp, gif · max 2MB</p>
+    </div>
+
     <button class="px-4 py-2 rounded bg-blue-600 text-white">Plaatsen</button>
   </form>
 </x-layout>

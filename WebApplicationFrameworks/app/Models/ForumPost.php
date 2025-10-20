@@ -6,6 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumPost extends Model
 {
-    protected $fillable = ['title','body','user_id','locked'];
-
+    protected $fillable = ['title','body','user_id','locked','image_path'];
 }
