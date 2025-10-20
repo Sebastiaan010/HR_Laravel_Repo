@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
     })->name('posts.store');
 });
 
+Route::get('/posts/{post}', function (ForumPost $post) {
+    return view('posts.show', compact('post'));
+})->name('posts.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
