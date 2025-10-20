@@ -61,5 +61,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/posts/{post}', function (ForumPost $post) {
+    $post->load(['comments.user']); 
+    return view('posts.show', compact('post'));
+})->name('posts.show');
+
 
 require __DIR__ . '/auth.php';
