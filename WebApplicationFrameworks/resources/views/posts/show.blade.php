@@ -4,6 +4,19 @@
         <p class="mt-2 text-sm text-slate-500">
             Geplaatst {{ $post->created_at->format('d-m-Y H:i') }}
         </p>
+        <div class="mt-2 flex gap-3 text-sm">
+            @can('update', $post)
+                <a href="{{ route('posts.edit', $post) }}" class="underline">Bewerken</a>
+            @endcan
+            @can('delete', $post)
+                <form method="POST" action="{{ route('posts.destroy', $post) }}" class="inline">
+                    @csrf @method('DELETE')
+                    <button class="text-red-600 underline" onclick="return confirm('Verwijderen?')">
+                        Verwijderen
+                    </button>
+                </form>
+            @endcan
+        </div>
 
         @if($post->image_path)
             <div class="mt-4">
