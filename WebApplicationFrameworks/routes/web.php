@@ -33,8 +33,9 @@ Route::view('/contact', 'contact')->name('contact');
  * Dashboard (Breeze)
  */
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return redirect()->route('home'); // alles wat naar 'dashboard' gaat komt op /
+})->name('dashboard');
+
 
 /**
  * Profiel (Breeze)
