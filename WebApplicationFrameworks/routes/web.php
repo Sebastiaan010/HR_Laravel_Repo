@@ -19,10 +19,15 @@ use App\Models\Comment;
 /**
  * Home: laatste posts (max 15 per pagina)
  */
+
 Route::get('/', function () {
-    $posts = ForumPost::latest()->paginate(15);
+    $posts = ForumPost::with('user')   // laad user-relatie mee
+        ->latest()
+        ->paginate(15);
+
     return view('home', compact('posts'));
 })->name('home');
+
 
 /**
  * Statische pagina’s

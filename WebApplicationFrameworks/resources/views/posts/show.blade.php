@@ -3,7 +3,9 @@
         <h1 class="text-3xl font-bold">{{ $post->title }}</h1>
         <p class="mt-2 text-sm text-slate-500">
             Geplaatst {{ $post->created_at->format('d-m-Y H:i') }}
+            • door {{ $post->user->name ?? 'anoniem' }}
         </p>
+
         <div class="mt-2 flex gap-3 text-sm">
             @can('update', $post)
                 <a href="{{ route('posts.edit', $post) }}" class="underline">Bewerken</a>

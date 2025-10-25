@@ -4,10 +4,11 @@
   @forelse($posts as $post)
     <article class="mb-6 flex gap-4 items-start bg-white border rounded-xl p-4 hover:shadow transition">
       {{-- Thumbnail (klikbaar) --}}
-      <a href="{{ route('posts.show', $post) }}" class="w-40 h-28 overflow-hidden rounded border bg-slate-100 flex items-center justify-center shrink-0">
+      <a href="{{ route('posts.show', $post) }}"
+        class="w-40 h-28 overflow-hidden rounded border bg-slate-100 flex items-center justify-center shrink-0">
         @if($post->image_path)
-          <img src="{{ asset('storage/'.$post->image_path) }}" alt="Afbeelding bij {{ $post->title }}"
-               class="w-full h-full object-cover">
+          <img src="{{ asset('storage/' . $post->image_path) }}" alt="Afbeelding bij {{ $post->title }}"
+            class="w-full h-full object-cover">
         @else
           <span class="text-xs text-slate-500">Geen afbeelding</span>
         @endif
@@ -27,6 +28,7 @@
 
         <p class="mt-1 text-xs text-slate-500">
           {{ $post->created_at->format('d-m-Y H:i') }}
+          • door {{ $post->user->name ?? 'anoniem' }}
         </p>
 
         {{-- Acties: lock/unlock + badge --}}
