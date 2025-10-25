@@ -1,6 +1,22 @@
 <x-layout>
   <h1 class="text-2xl font-bold mb-4">Laatste posts</h1>
 
+  <form method="GET" action="{{ route('home') }}" class="mb-4 flex flex-wrap gap-2 items-center">
+    <input type="text" name="q" value="{{ request('q') }}" placeholder="Zoek in titel/tekst"
+      class="border rounded px-3 py-2 w-64">
+    <select name="category" class="border rounded px-3 py-2">
+      <option value="">Alle categorieën</option>
+      @foreach($categories as $cat)
+        <option value="{{ $cat }}" @selected(request('category') === $cat)>{{ ucfirst($cat) }}</option>
+      @endforeach
+    </select>
+    <button class="px-3 py-2 border rounded">Zoeken</button>
+    @if(request()->hasAny(['q', 'category']))
+      <a href="{{ route('home') }}" class="px-3 py-2 border rounded">Reset</a>
+    @endif
+  </form>
+
+
   @forelse($posts as $post)
     <article class="mb-6 flex gap-4 items-start bg-white border rounded-xl p-4 hover:shadow transition">
       {{-- Thumbnail (klikbaar) --}}

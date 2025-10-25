@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumPost extends Model
 {
-    protected $fillable = ['title','body','user_id','locked','image_path'];
+    protected $fillable = ['title','body','user_id','locked','image_path','category'];
+
 
     public function comments()
     {

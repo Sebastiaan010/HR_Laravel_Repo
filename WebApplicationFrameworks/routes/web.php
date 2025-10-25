@@ -17,17 +17,25 @@ use App\Models\Comment;
 */
 
 /**
- * Home: laatste posts (max 15 per pagina)
+ * Home: laatste posts (max 15 per pagina) + zoeken & filter
  */
+Route::get('/', function (Request $req) {
+    $categories = ['algemeen','ruil','deck','waarde']; // simple set
 
-Route::get('/', function () {
-    $posts = ForumPost::with('user')   // laad user-relatie mee
+    $posts = ForumPost::with('user')
+        ->when($req->q, function ($q) use ($req) {
+            $q->where(function ($sub) use ($req) {
+                $sub->where('title','like','%'.$req->q.'%')
+                    ->orWhere('body','like','%'.$req->q.'%');
+            });
+        })
+        ->when($req->category, fn($q) => $q->where('category', $req->category))
         ->latest()
-        ->paginate(15);
+        ->paginate(15)
+        ->withQueryString();
 
-    return view('home', compact('posts'));
+    return view('home', compact('posts','categories'));
 })->name('home');
-
 
 /**
  * Statische pagina’s
@@ -39,7 +47,7 @@ Route::view('/contact', 'contact')->name('contact');
  * Dashboard (doorverwijzen naar home)
  */
 Route::get('/dashboard', function () {
-    return redirect()->route('home'); // alles wat naar 'dashboard' gaat komt op /
+    return redirect()->route('home');
 })->name('dashboard');
 
 /**
@@ -60,9 +68,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/posts', function (Request $req) {
         $data = $req->validate([
-            'title' => ['required', 'string', 'max:200'],
-            'body'  => ['required', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+            'title'    => ['required', 'string', 'max:200'],
+            'body'     => ['required', 'string'],
+            'image'    => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+            'category' => ['nullable','string','max:50'],
         ]);
 
         $imagePath = $req->hasFile('image')
@@ -72,6 +81,7 @@ Route::middleware('auth')->group(function () {
         ForumPost::create([
             'title'      => $data['title'],
             'body'       => $data['body'],
+            'category'   => $data['category'] ?? null,   // ← toegevoegd
             'image_path' => $imagePath,
             'user_id'    => Auth::id(),
         ]);
@@ -90,9 +100,10 @@ Route::middleware('auth')->group(function () {
         Gate::authorize('update', $post);
 
         $data = $req->validate([
-            'title' => ['required','string','max:200'],
-            'body'  => ['required','string'],
-            'image' => ['nullable','image','mimes:jpeg,png,webp,gif','max:2048'],
+            'title'    => ['required','string','max:200'],
+            'body'     => ['required','string'],
+            'image'    => ['nullable','image','mimes:jpeg,png,webp,gif','max:2048'],
+            'category' => ['nullable','string','max:50'],
         ]);
 
         if ($req->hasFile('image')) {
@@ -103,8 +114,9 @@ Route::middleware('auth')->group(function () {
         }
 
         $post->update([
-            'title' => $data['title'],
-            'body'  => $data['body'],
+            'title'    => $data['title'],
+            'body'     => $data['body'],
+            'category' => $data['category'] ?? null,     // ← toegevoegd
         ]);
 
         return redirect()->route('posts.show', $post)->with('success','Post bijgewerkt');
@@ -150,7 +162,7 @@ Route::middleware('auth')->group(function () {
  * LET OP: deze staat NA alle vaste /posts/... routes
  */
 Route::get('/posts/{post}', function (ForumPost $post) {
-    $post->load(['comments.user']);
+    $post->load(['user','comments.user']);
     return view('posts.show', compact('post'));
 })->name('posts.show')->whereNumber('post');
 

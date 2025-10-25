@@ -15,6 +15,17 @@
     </div>
 
     <div>
+      <label class="block text-sm mb-1">Categorie</label>
+      <select name="category" class="border rounded px-3 py-2">
+        <option value="">— kies —</option>
+        @foreach(['algemeen', 'ruil', 'deck', 'waarde'] as $cat)
+          <option value="{{ $cat }}" @selected(old('category', $post->category ?? '') === $cat)>{{ ucfirst($cat) }}</option>
+        @endforeach
+      </select>
+    </div>
+
+
+    <div>
       <label class="block text-sm mb-1">Bericht</label>
       <textarea name="body" rows="6" class="border rounded w-full px-3 py-2">{{ old('body') }}</textarea>
     </div>
