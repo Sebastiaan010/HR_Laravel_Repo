@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BerichtStatusController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,12 +31,11 @@ Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 
 /**
- * Dashboard (Breeze)
+ * Dashboard (doorverwijzen naar home)
  */
 Route::get('/dashboard', function () {
     return redirect()->route('home'); // alles wat naar 'dashboard' gaat komt op /
 })->name('dashboard');
-
 
 /**
  * Profiel (Breeze)
@@ -115,8 +115,17 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('home')->with('success','Post verwijderd');
     })->name('posts.destroy')->whereNumber('post');
 
-    // Comments: aanmaken
+    // Status toggle (LOCK/UNLOCK) — POST naar aparte controller action
+    Route::post('/posts/{post}/toggle-lock', [BerichtStatusController::class, 'toggle'])
+        ->name('posts.toggle-lock')
+        ->whereNumber('post');
+
+    // Comments: aanmaken (blokkeren als gesloten)
     Route::post('/posts/{post}/comments', function (Request $req, ForumPost $post) {
+        if ($post->locked) {
+            abort(403, 'Dit topic is gesloten.');
+        }
+
         $data = $req->validate([
             'body' => ['required', 'string', 'max:1000'],
         ]);
