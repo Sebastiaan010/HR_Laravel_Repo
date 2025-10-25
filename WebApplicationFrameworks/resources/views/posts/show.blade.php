@@ -6,6 +6,14 @@
             • door {{ $post->user->name ?? 'anoniem' }}
         </p>
 
+        @if($post->category)
+            <div class="mt-3">
+                <span class="inline-block text-xs px-2 py-1 rounded-full bg-slate-200 text-slate-700">
+                    {{ ucfirst($post->category) }}
+                </span>
+            </div>
+        @endif
+
         <div class="mt-2 flex gap-3 text-sm">
             @can('update', $post)
                 <a href="{{ route('posts.edit', $post) }}" class="underline">Bewerken</a>
