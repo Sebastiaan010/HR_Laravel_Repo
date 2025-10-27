@@ -52,11 +52,23 @@
                         {{ $c->user->name ?? 'anoniem' }} • {{ $c->created_at->diffForHumans() }}
                     </div>
                     <p>{{ $c->body }}</p>
+
+                    @auth
+                        @if($c->user_id === auth()->id() || auth()->user()->role === 'admin')
+                            <form method="POST" action="{{ route('comments.destroy', $c) }}" class="mt-2">
+                                @csrf @method('DELETE')
+                                <button class="text-xs text-red-600 underline" onclick="return confirm('Reactie verwijderen?')">
+                                    Verwijder
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             @empty
                 <p class="text-slate-600">Nog geen reacties.</p>
             @endforelse
         </div>
+
         {{-- Flash --}}
         @if (session('success'))
             <div class="mt-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">

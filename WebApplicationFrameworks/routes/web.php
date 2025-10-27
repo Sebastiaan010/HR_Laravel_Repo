@@ -162,6 +162,16 @@ Route::middleware('auth')->group(function () {
 
         return back()->with('success', 'Reactie geplaatst!');
     })->name('comments.store')->whereNumber('post');
+
+    Route::delete('/comments/{comment}', function (Comment $comment) {
+        $user = auth()->user();
+        if (!$user || ($comment->user_id !== $user->id && $user->role !== 'admin')) {
+            abort(403);
+        }
+        $comment->delete();
+        return back()->with('success', 'Reactie verwijderd');
+    })->name('comments.destroy')->whereNumber('comment');
+
 });
 
 /**
