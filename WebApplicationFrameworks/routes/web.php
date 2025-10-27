@@ -20,13 +20,13 @@ use App\Models\Comment;
  * Home: laatste posts (max 15 per pagina) + zoeken & filter
  */
 Route::get('/', function (Request $req) {
-    $categories = ['algemeen','ruil','deck','waarde']; // simple set
+    $categories = ['algemeen', 'ruil', 'deck', 'waarde']; // simple set
 
     $posts = ForumPost::with('user')
         ->when($req->q, function ($q) use ($req) {
             $q->where(function ($sub) use ($req) {
-                $sub->where('title','like','%'.$req->q.'%')
-                    ->orWhere('body','like','%'.$req->q.'%');
+                $sub->where('title', 'like', '%' . $req->q . '%')
+                    ->orWhere('body', 'like', '%' . $req->q . '%');
             });
         })
         ->when($req->category, fn($q) => $q->where('category', $req->category))
@@ -34,7 +34,7 @@ Route::get('/', function (Request $req) {
         ->paginate(15)
         ->withQueryString();
 
-    return view('home', compact('posts','categories'));
+    return view('home', compact('posts', 'categories'));
 })->name('home');
 
 /**
@@ -64,14 +64,21 @@ Route::middleware('auth')->group(function () {
  */
 Route::middleware('auth')->group(function () {
     // Create
-    Route::view('/posts/create', 'posts.create')->name('posts.create');
+    Route::get('/posts/create', function () {
+        $count = Comment::where('user_id', auth()->id())->count(); // ← losse query
+        if ($count < 5) {
+            return redirect()->route('home')
+                ->with('success', 'Je hebt minimaal 5 reacties nodig om een topic te openen.');
+        }
+        return view('posts.create');
+    })->name('posts.create');
 
     Route::post('/posts', function (Request $req) {
         $data = $req->validate([
-            'title'    => ['required', 'string', 'max:200'],
-            'body'     => ['required', 'string'],
-            'image'    => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
-            'category' => ['nullable','string','max:50'],
+            'title' => ['required', 'string', 'max:200'],
+            'body' => ['required', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+            'category' => ['nullable', 'string', 'max:50'],
         ]);
 
         $imagePath = $req->hasFile('image')
@@ -79,11 +86,11 @@ Route::middleware('auth')->group(function () {
             : null;
 
         ForumPost::create([
-            'title'      => $data['title'],
-            'body'       => $data['body'],
-            'category'   => $data['category'] ?? null,   // ← toegevoegd
+            'title' => $data['title'],
+            'body' => $data['body'],
+            'category' => $data['category'] ?? null,   // ← toegevoegd
             'image_path' => $imagePath,
-            'user_id'    => Auth::id(),
+            'user_id' => Auth::id(),
         ]);
 
         return redirect()->route('home')->with('success', 'Post geplaatst!');
@@ -100,26 +107,26 @@ Route::middleware('auth')->group(function () {
         Gate::authorize('update', $post);
 
         $data = $req->validate([
-            'title'    => ['required','string','max:200'],
-            'body'     => ['required','string'],
-            'image'    => ['nullable','image','mimes:jpeg,png,webp,gif','max:2048'],
-            'category' => ['nullable','string','max:50'],
+            'title' => ['required', 'string', 'max:200'],
+            'body' => ['required', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,webp,gif', 'max:2048'],
+            'category' => ['nullable', 'string', 'max:50'],
         ]);
 
         if ($req->hasFile('image')) {
             if ($post->image_path) {
                 Storage::disk('public')->delete($post->image_path);
             }
-            $post->image_path = $req->file('image')->store('posts','public');
+            $post->image_path = $req->file('image')->store('posts', 'public');
         }
 
         $post->update([
-            'title'    => $data['title'],
-            'body'     => $data['body'],
+            'title' => $data['title'],
+            'body' => $data['body'],
             'category' => $data['category'] ?? null,     // ← toegevoegd
         ]);
 
-        return redirect()->route('posts.show', $post)->with('success','Post bijgewerkt');
+        return redirect()->route('posts.show', $post)->with('success', 'Post bijgewerkt');
     })->name('posts.update')->whereNumber('post');
 
     // Delete
@@ -129,7 +136,7 @@ Route::middleware('auth')->group(function () {
             Storage::disk('public')->delete($post->image_path);
         }
         $post->delete();
-        return redirect()->route('home')->with('success','Post verwijderd');
+        return redirect()->route('home')->with('success', 'Post verwijderd');
     })->name('posts.destroy')->whereNumber('post');
 
     // Status toggle (LOCK/UNLOCK) — POST naar aparte controller action
@@ -149,8 +156,8 @@ Route::middleware('auth')->group(function () {
 
         Comment::create([
             'forum_post_id' => $post->id,
-            'user_id'       => auth()->id(),
-            'body'          => $data['body'],
+            'user_id' => auth()->id(),
+            'body' => $data['body'],
         ]);
 
         return back()->with('success', 'Reactie geplaatst!');
@@ -162,7 +169,7 @@ Route::middleware('auth')->group(function () {
  * LET OP: deze staat NA alle vaste /posts/... routes
  */
 Route::get('/posts/{post}', function (ForumPost $post) {
-    $post->load(['user','comments.user']);
+    $post->load(['user', 'comments.user']);
     return view('posts.show', compact('post'));
 })->name('posts.show')->whereNumber('post');
 
