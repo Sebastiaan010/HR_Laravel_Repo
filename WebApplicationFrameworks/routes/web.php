@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\ForumPost;
 use App\Models\Comment;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
 /**
  * Home: laatste posts (max 15 per pagina) + zoeken & filter
  */
@@ -65,7 +59,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     // Create
     Route::get('/posts/create', function () {
-        $count = Comment::where('user_id', auth()->id())->count(); // ← losse query
+        $count = Comment::where('user_id', auth()->id())->count();
         if ($count < 5) {
             return redirect()->route('home')
                 ->with('success', 'Je hebt minimaal 5 reacties nodig om een topic te openen.');
@@ -88,7 +82,7 @@ Route::middleware('auth')->group(function () {
         ForumPost::create([
             'title' => $data['title'],
             'body' => $data['body'],
-            'category' => $data['category'] ?? null,   // ← toegevoegd
+            'category' => $data['category'] ?? null,
             'image_path' => $imagePath,
             'user_id' => Auth::id(),
         ]);
@@ -123,7 +117,7 @@ Route::middleware('auth')->group(function () {
         $post->update([
             'title' => $data['title'],
             'body' => $data['body'],
-            'category' => $data['category'] ?? null,     // ← toegevoegd
+            'category' => $data['category'] ?? null,  
         ]);
 
         return redirect()->route('posts.show', $post)->with('success', 'Post bijgewerkt');
