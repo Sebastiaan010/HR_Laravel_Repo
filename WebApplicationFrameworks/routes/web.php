@@ -166,6 +166,17 @@ Route::middleware('auth')->group(function () {
         return back()->with('success', 'Reactie verwijderd');
     })->name('comments.destroy')->whereNumber('comment');
 
+    Route::get('/admin', function () {
+    $user = auth()->user();
+    if (!$user || $user->role !== 'admin') abort(403);
+
+    $posts = \App\Models\ForumPost::with('user')->latest()->paginate(20);
+    $users = \App\Models\User::latest()->paginate(20);
+
+    return view('admin.dashboard', compact('posts','users'));
+})->name('admin.dashboard');
+
+
 });
 
 /**

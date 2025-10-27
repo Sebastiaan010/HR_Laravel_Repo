@@ -34,6 +34,12 @@
             <button class="underline">Logout</button>
           </form>
         @endauth
+        @auth
+          @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.dashboard') }}" class="hover:underline">Admin</a>
+          @endif
+        @endauth
+
       </div>
     </div>
   </nav>
