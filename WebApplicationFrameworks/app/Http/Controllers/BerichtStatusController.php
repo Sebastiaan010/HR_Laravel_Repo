@@ -15,7 +15,6 @@ class BerichtStatusController extends Controller
         $post->locked = ! $post->locked;
         $post->save();
 
-        // Ajax? → JSON terug
         if ($request->wantsJson()) {
             return response()->json([
                 'locked' => $post->locked,
@@ -23,7 +22,6 @@ class BerichtStatusController extends Controller
             ]);
         }
 
-        // Normale POST → redirect
         return back()->with('success', $post->locked ? 'Post gesloten' : 'Post heropend');
     }
 }

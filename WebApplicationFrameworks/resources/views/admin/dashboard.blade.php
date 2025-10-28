@@ -1,6 +1,6 @@
 <x-layout>
   <h1 class="text-2xl font-bold mb-6">Admin dashboard</h1>
-    
+
   <section class="mb-10">
     <h2 class="text-lg font-semibold mb-2">Posts</h2>
     <div class="overflow-x-auto border rounded">
@@ -32,7 +32,6 @@
               </td>
               <td class="px-3 py-2">{{ $p->created_at->format('d-m-Y H:i') }}</td>
               <td class="px-3 py-2">
-                {{-- Lock/unlock (POST naar bestaande controller action) --}}
                 <form method="POST" action="{{ route('posts.toggle-lock',$p) }}" class="inline">
                   @csrf
                   <button class="px-2 py-1 border rounded text-xs">

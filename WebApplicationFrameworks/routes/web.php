@@ -14,7 +14,7 @@ use App\Models\Comment;
  * Home: laatste posts (max 15 per pagina) + zoeken & filter
  */
 Route::get('/', function (Request $req) {
-    $categories = ['algemeen', 'ruil', 'deck', 'waarde']; // simple set
+    $categories = ['algemeen', 'ruil', 'deck', 'waarde']; 
 
     $posts = ForumPost::with('user')
         ->when($req->q, function ($q) use ($req) {
@@ -170,7 +170,7 @@ Route::middleware('auth')->group(function () {
     $user = auth()->user();
     if (!$user || $user->role !== 'admin') abort(403);
 
-    $posts = \App\Models\ForumPost::with('user')->latest()->paginate(20);
+    $posts = ForumPost::with('user')->latest()->paginate(20);
     $users = \App\Models\User::latest()->paginate(20);
 
     return view('admin.dashboard', compact('posts','users'));
