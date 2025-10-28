@@ -16,7 +16,6 @@
     @endif
   </form>
 
-
   @forelse($posts as $post)
     <article class="mb-6 flex gap-4 items-start bg-white border rounded-xl p-4 hover:shadow transition">
       <a href="{{ route('posts.show', $post) }}"
