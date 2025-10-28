@@ -19,7 +19,6 @@
 
   @forelse($posts as $post)
     <article class="mb-6 flex gap-4 items-start bg-white border rounded-xl p-4 hover:shadow transition">
-      {{-- Thumbnail (klikbaar) --}}
       <a href="{{ route('posts.show', $post) }}"
         class="w-40 h-28 overflow-hidden rounded border bg-slate-100 flex items-center justify-center shrink-0">
         @if($post->image_path)
@@ -30,7 +29,6 @@
         @endif
       </a>
 
-      {{-- Content --}}
       <div class="flex-1">
         <h2 class="text-lg font-semibold">
           <a href="{{ route('posts.show', $post) }}" class="hover:underline">
@@ -47,7 +45,6 @@
           • door {{ $post->user->name ?? 'anoniem' }}
         </p>
 
-        {{-- Acties: lock/unlock + badge --}}
         <div class="mt-2 flex items-center gap-3">
           @can('update', $post)
             <form method="POST" action="{{ route('posts.toggle-lock', $post) }}" class="inline">

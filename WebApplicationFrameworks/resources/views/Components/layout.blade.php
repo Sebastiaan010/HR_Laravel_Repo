@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8" />
   <title>Home page</title>
-  <!-- Tailwind CDN (dev only, super simpel) -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -20,7 +19,6 @@
         @endauth
       </div>
 
-      {{-- Right side: auth --}}
       <div class="flex items-center gap-3">
         @guest
           <a href="{{ route('login') }}">Login</a>
@@ -50,9 +48,8 @@
     </div>
   @endif
 
-  {{-- Simple Pokémon hero (alleen image + subtiele overlay) --}}
   <header class="relative">
-    <img src="{{ asset('img/hero.jpg') }}" {{-- zet jouw bestand in public/img/ --}} alt="Pokémon banner"
+    <img src="{{ asset('img/hero.jpg') }}" alt="Pokémon banner"
       class="w-full h-40 sm:h-52 object-cover">
     <div class="absolute inset-0 bg-black/25"></div>
     <div class="absolute inset-0 flex items-center">
@@ -76,7 +73,6 @@
 <footer class="mt-12 border-t bg-white">
   <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-600
               flex flex-col sm:flex-row items-center justify-between gap-3">
-    {{-- mini “pokéball” (pure CSS, geen asset nodig) --}}
     <div class="flex items-center gap-2">
       <span class="relative inline-block w-5 h-5 rounded-full bg-red-600 overflow-hidden">
         <span class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0.5 bg-black"></span>

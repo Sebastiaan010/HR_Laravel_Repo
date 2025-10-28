@@ -69,7 +69,6 @@
             @endforelse
         </div>
 
-        {{-- Flash --}}
         @if (session('success'))
             <div class="mt-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
                 {{ session('success') }}

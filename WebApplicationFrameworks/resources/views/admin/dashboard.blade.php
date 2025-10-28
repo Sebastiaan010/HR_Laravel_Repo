@@ -1,7 +1,6 @@
 <x-layout>
   <h1 class="text-2xl font-bold mb-6">Admin dashboard</h1>
-
-  {{-- Posts overzicht --}}
+    
   <section class="mb-10">
     <h2 class="text-lg font-semibold mb-2">Posts</h2>
     <div class="overflow-x-auto border rounded">
@@ -51,7 +50,6 @@
     <div class="mt-3">{{ $posts->links() }}</div>
   </section>
 
-  {{-- Users overzicht --}}
   <section>
     <h2 class="text-lg font-semibold mb-2">Gebruikers</h2>
     <div class="overflow-x-auto border rounded">

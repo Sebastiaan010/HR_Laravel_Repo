@@ -5,14 +5,12 @@
       <h1 class="text-2xl font-bold mb-1">Log in</h1>
       <p class="text-sm text-slate-600 mb-6">Welkom terug! Log in om verder te gaan.</p>
 
-      {{-- Success / status (bijv. wachtwoord reset) --}}
       @if (session('status'))
         <div class="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
           {{ session('status') }}
         </div>
       @endif
 
-      {{-- Errors --}}
       @if ($errors->any())
         <ul class="mb-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
           @foreach ($errors->all() as $e)
